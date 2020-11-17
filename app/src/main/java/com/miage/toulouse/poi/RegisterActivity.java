@@ -66,36 +66,6 @@ public class RegisterActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listThemes);
         listViewTheme.setAdapter(arrayAdapter);
 
-        dbRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String nomTheme = snapshot.getValue(Theme.class).getNom();
-                listThemes.add(nomTheme);
-                arrayAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
 
         BoutonCreerCompte.setOnClickListener(new View.OnClickListener(){
             @Override
