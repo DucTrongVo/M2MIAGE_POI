@@ -1,4 +1,4 @@
-package com.miage.toulouse.poi.entity;
+package com.miage.toulouse.poi.Entity;
 
 import java.io.Serializable;
 

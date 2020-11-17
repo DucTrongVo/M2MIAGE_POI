@@ -1,4 +1,4 @@
-package com.miage.toulouse.poi;
+package com.miage.toulouse.poi.Entity;
 
 import java.util.ArrayList;
 
