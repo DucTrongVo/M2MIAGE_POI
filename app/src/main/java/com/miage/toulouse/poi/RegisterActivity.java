@@ -1,6 +1,7 @@
 package com.miage.toulouse.poi;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,8 +9,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -18,9 +21,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,20 +41,61 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
     String utilisateurID;
 
+    ListView listViewTheme ;
+    ArrayList<String> listThemes = new ArrayList<String>();
+    DatabaseReference dbRef ;
+    ArrayAdapter<String> arrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        dbRef = FirebaseDatabase.getInstance().getReference("Theme");
+        fireBaseAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         TextNom = findViewById(R.id.TextNom);
         TextPrenom = findViewById(R.id.TextPrenom);
         TextMail = findViewById(R.id.TextMail);
         TextMdp = findViewById(R.id.TextMdp);
         BoutonCreerCompte = findViewById(R.id.BoutonCreerCompte);
-
-        fireBaseAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
         progressBar2 = findViewById(R.id.progressBar2);
+        listViewTheme = findViewById(R.id.ListViewTheme);
+
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listThemes);
+        listViewTheme.setAdapter(arrayAdapter);
+
+        dbRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String nomTheme = snapshot.getValue(Theme.class).getNom();
+                listThemes.add(nomTheme);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         BoutonCreerCompte.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -103,5 +152,10 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    public void goToListThemesActivity(View view) {
+        Intent intent=new Intent(this, ListThemesActivity.class);
+        startActivity(intent);
     }
 }
