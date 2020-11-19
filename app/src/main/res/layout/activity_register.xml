@@ -13,90 +13,82 @@
         android:id="@+id/BoutonCreerCompte"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="548dp"
         android:background="@color/black"
         android:backgroundTint="@color/black"
         android:text="Créer le compte !"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextMdp"
-        app:layout_constraintVertical_bias="0.82" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/TextPrenom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="18"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="132dp"
+        android:ems="11"
         android:hint="Prenom"
         android:inputType="textPersonName"
         android:textColorHint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextNom"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/TextMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="18"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="180dp"
+        android:ems="17"
         android:hint="Mail"
         android:inputType="textPersonName"
         android:textColorHint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextPrenom"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/TextMdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="18"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="4dp"
+        android:ems="17"
         android:hint="Mot de Passe"
         android:inputType="textPersonName"
         android:password="true"
         android:textColorHint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextMail"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/TextMail" />
 
     <EditText
         android:id="@+id/TextNom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="18"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="80dp"
+        android:ems="11"
         android:hint="Nom"
         android:inputType="textPersonName"
         android:textColorHint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextMenu"
-        app:layout_constraintVertical_bias="0.067" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/TextMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/adamina"
         android:text="Creer un compte"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -106,31 +98,44 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.475"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TextMdp"
-        app:layout_constraintVertical_bias="0.966" />
+        app:layout_constraintVertical_bias="0.72" />
+
+    <ImageView
+        android:id="@+id/profilePic"
+        android:layout_width="113dp"
+        android:layout_height="107dp"
+        android:layout_marginTop="68dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/avatar_372_456324" />
 
     <ListView
-        android:id="@+id/ListViewTheme"
-        android:layout_width="423dp"
-        android:layout_height="156dp"
-        app:layout_constraintBottom_toTopOf="@+id/BoutonCreerCompte"
+        android:id="@+id/ListViewThemes"
+        android:layout_width="347dp"
+        android:layout_height="212dp"
+        android:layout_marginTop="328dp"
+        android:background="?android:attr/colorActivatedHighlight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextMdp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/BoutonThemes"
+    <TextView
+        android:id="@+id/textMesThemes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="104dp"
-        android:onClick="goToListThemesActivity"
-        android:text="Mes themes"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="288dp"
+        android:text="Mes thèmes :"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
