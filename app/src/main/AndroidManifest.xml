@@ -11,11 +11,10 @@
         android:theme="@style/Theme.POI">
         <activity android:name=".Component.ListThemesActivity"></activity>
         <activity android:name=".Component.MenuActivity" />
-        <activity android:name=".Authentication.RegisterActivity" />
+        <activity android:name=".Authentication.RegisterActivity"></activity>
         <activity android:name=".Authentication.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
