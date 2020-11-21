@@ -8,7 +8,8 @@
         android:label="Culture&apos;Tour"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.POI">
+        android:theme="@style/Theme.POI"
+        android:usesCleartextTraffic="true">
         <activity android:name=".Component.ListThemesActivity"></activity>
         <activity android:name=".Component.MenuActivity" />
         <activity android:name=".Authentication.RegisterActivity"></activity>
@@ -25,5 +26,6 @@
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 </manifest>
