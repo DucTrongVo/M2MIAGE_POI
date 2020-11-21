@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Authentication.LoginActivity;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
@@ -55,20 +57,17 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void getHelloWorld(View view){
-        final Call<String> hello = apiService.getHelloWorld();
-        hello.enqueue(new Callback<String>() {
+        final Call<JsonElement> hello = apiService.getHelloWorld();
+        hello.enqueue(new Callback<JsonElement>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if(response.isSuccessful()){
                     TextView textView = (TextView) findViewById(R.id.textViewTest);
-                    try {
-                        JSONObject retObj = new JSONObject(response.body());
-                        String res = "User is "+retObj;
-                        System.out.println(res);
-                        textView.setText(res);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    JsonElement res = response.body();
+                    JsonObject jsonObject = res.getAsJsonObject();
+                    String stringToPrint = "User is "+jsonObject.toString();
+                    System.out.println(stringToPrint);
+                    textView.setText(stringToPrint);
 
                 }
                 else{
@@ -77,7 +76,7 @@ public class MenuActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<JsonElement> call, Throwable t) {
                 Toast.makeText(MenuActivity.this, "Erreur connexion "+t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
