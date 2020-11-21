@@ -43,7 +43,7 @@ public class MenuActivity extends AppCompatActivity {
                 .create();
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         apiService = retrofit.create(APIService.class);
@@ -81,16 +81,18 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
     }
-    public User getUserById(View view){
-        final Call<User> user = apiService.getUserById(testIdUser);
-        user.enqueue(new Callback<User>() {
+    public void getUserById(View view){
+        final Call<JsonElement> user = apiService.getUserById(testIdUser);
+        user.enqueue(new Callback<JsonElement>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if(response.isSuccessful()){
                     TextView textView = (TextView) findViewById(R.id.textViewTest);
-                    String res = "User is "+response.body();
-                    System.out.println(res);
-                    textView.setText(res);
+                    JsonElement res = response.body();
+                    JsonObject jsonObject = res.getAsJsonObject();
+                    String stringToPrint = "User is "+jsonObject.get("prenom").getAsString();
+                    System.out.println(stringToPrint);
+                    textView.setText(stringToPrint);
                 }
                 else{
                     Toast.makeText(MenuActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
@@ -98,12 +100,10 @@ public class MenuActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<JsonElement> call, Throwable t) {
                 System.out.println(t);
                 Toast.makeText(MenuActivity.this, "Erreur connexion", Toast.LENGTH_SHORT).show();
             }
         });
-
-        return null;
     }
 }

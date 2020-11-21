@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 
 public interface APIService {
     @GET("api/users/{idUser}")
-    Call<User> getUserById(@Path("idUser") String idUser);
+    Call<JsonElement> getUserById(@Path("idUser") String idUser);
     @GET("hello-world")
     Call<JsonElement> getHelloWorld();
 }
