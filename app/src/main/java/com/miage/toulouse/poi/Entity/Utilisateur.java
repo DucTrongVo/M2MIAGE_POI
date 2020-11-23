@@ -3,13 +3,13 @@ package com.miage.toulouse.poi.Entity;
 import java.io.Serializable;
 import java.util.List;
 
-public class User implements Serializable {
+public class Utilisateur implements Serializable {
     private String nom;
     private String prenom;
     private String mail;
-    private List<String> themes;
+    private String themes;
 
-    public User(String nom, String prenom, String mail, List<String> themes) {
+    public Utilisateur(String nom, String prenom, String mail, String themes) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
@@ -40,11 +40,11 @@ public class User implements Serializable {
         this.mail = mail;
     }
 
-    public List<String> getThemes() {
+    public String getThemes() {
         return themes;
     }
 
-    public void setThemes(List<String> themes) {
+    public void setThemes(String themes) {
         this.themes = themes;
     }
 }
