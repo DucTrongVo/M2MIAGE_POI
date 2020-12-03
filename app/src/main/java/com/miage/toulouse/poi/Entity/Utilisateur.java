@@ -8,8 +8,10 @@ public class Utilisateur implements Serializable {
     private String prenom;
     private String mail;
     private String themes;
+    private String identifiant;
 
-    public Utilisateur(String nom, String prenom, String mail, String themes) {
+    public Utilisateur(String identifiant, String nom, String prenom, String mail, String themes) {
+        this.identifiant=identifiant;
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
@@ -46,5 +48,13 @@ public class Utilisateur implements Serializable {
 
     public void setThemes(String themes) {
         this.themes = themes;
+    }
+
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
     }
 }

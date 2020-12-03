@@ -163,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this,"Utilisateur créé",Toast.LENGTH_SHORT).show();
                             utilisateurID = fireBaseAuth.getCurrentUser().getUid();
-                            createUtilisateur(nom, prenom, mail, themes);
+                            createUtilisateur(utilisateurID, nom, prenom, mail, themes);
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         } else{
                             Toast.makeText(RegisterActivity.this,"Erreur ! "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
@@ -247,8 +247,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public void createUtilisateur(String nom, String prenom, String mail, String themes){
-        Utilisateur utilisateur = new Utilisateur(nom, prenom, mail, themes);
+    public void createUtilisateur(String identifiant, String nom, String prenom, String mail, String themes){
+        Utilisateur utilisateur = new Utilisateur(identifiant, nom, prenom, mail, themes);
         final Call<Void> user = apiService.createUtilisateur(utilisateur);
         user.enqueue(new Callback<Void>() {
             @Override
