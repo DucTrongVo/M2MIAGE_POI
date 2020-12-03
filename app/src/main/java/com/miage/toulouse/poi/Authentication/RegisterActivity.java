@@ -39,13 +39,24 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Component.ListThemesActivity;
+import com.miage.toulouse.poi.Component.MenuActivity;
+import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
+import com.miage.toulouse.poi.Services.APIService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -68,6 +79,10 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
 
+    Retrofit retrofit;
+    APIService apiService;
+    final String BASE_URL = "https://us-central1-projetmobilite-a0b6f.cloudfunctions.net/app/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +103,13 @@ public class RegisterActivity extends AppCompatActivity {
         profilePic = findViewById(R.id.profilePic);
         listViewTheme = findViewById(R.id.ListViewThemes);
         listViewTheme.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        this.retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apiService = retrofit.create(APIService.class);
 
         addDataToListView(listViewTheme);
         listViewTheme.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,18 +163,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this,"Utilisateur créé",Toast.LENGTH_SHORT).show();
                             utilisateurID = fireBaseAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("utilisateur").document(utilisateurID);
-                            Map<String, Object> utilisateur = new HashMap<>();
-                            utilisateur.put("nom",nom);
-                            utilisateur.put("prenom",prenom);
-                            utilisateur.put("mail",mail);
-                            utilisateur.put("themes",themes);
-                            documentReference.set(utilisateur).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("TAG","Succès ! Le profil utilisateur a bien été créé");
-                                }
-                            });
+                            createUtilisateur(nom, prenom, mail, themes);
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         } else{
                             Toast.makeText(RegisterActivity.this,"Erreur ! "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
@@ -234,6 +245,27 @@ public class RegisterActivity extends AppCompatActivity {
                 listViewTheme.setAdapter(arrayAdapter);
             }
         });
+    }
+
+    public void createUtilisateur(String nom, String prenom, String mail, String themes){
+        Utilisateur utilisateur = new Utilisateur(nom, prenom, mail, themes);
+        final Call<Void> user = apiService.createUtilisateur(utilisateur);
+        user.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Toast.makeText(RegisterActivity.this, "Utilisateur crée dans la base", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(RegisterActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, "Erreur connexion!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }

@@ -37,7 +37,9 @@
         android:backgroundTint="@color/black"
         android:text="Points d'intérêt à proximité"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/TextMenu"
+        app:layout_constraintVertical_bias="0.262"
+        android:onClick="getUserById"/>
 
     <Button
         android:id="@+id/BoutonCarte"
@@ -110,5 +112,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         android:onClick="goToMonProfilActivity"/>
+
+    <TextView
+        android:id="@+id/textViewTest"
+        android:layout_width="131dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="96dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BoutonRechercheParTheme" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
