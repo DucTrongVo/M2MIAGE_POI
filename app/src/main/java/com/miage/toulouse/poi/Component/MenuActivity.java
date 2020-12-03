@@ -16,11 +16,16 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-
     }
 
     public void goToLoginActivity(View view) {
         Intent intent=new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToMonProfilActivity(View view) {
+        Intent intent=new Intent(this, MonProfilActivity.class);
         startActivity(intent);
         finish();
     }

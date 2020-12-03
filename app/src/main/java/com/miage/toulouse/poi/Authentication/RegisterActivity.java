@@ -143,6 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
                             utilisateurID = fireBaseAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = fStore.collection("utilisateur").document(utilisateurID);
                             Map<String, Object> utilisateur = new HashMap<>();
+                            utilisateur.put("identifiant",utilisateurID);
                             utilisateur.put("nom",nom);
                             utilisateur.put("prenom",prenom);
                             utilisateur.put("mail",mail);
