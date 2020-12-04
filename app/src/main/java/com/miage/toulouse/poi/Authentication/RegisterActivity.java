@@ -4,12 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,9 +26,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,17 +37,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Component.ListThemesActivity;
-import com.miage.toulouse.poi.Component.MenuActivity;
 import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -59,13 +52,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    private FirebaseUser user;
     EditText TextNom, TextPrenom, TextMail, TextMdp;
     Button BoutonCreerCompte;
     FirebaseAuth fireBaseAuth;
     ProgressBar progressBar2;
     FirebaseFirestore fStore;
     String utilisateurID;
+    String photoURL;
     ArrayList<String> listThemesUser = new ArrayList<String>();
 
     DatabaseReference dbRef ;
@@ -97,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextNom = findViewById(R.id.TextNom);
         TextPrenom = findViewById(R.id.TextPrenom);
         TextMail = findViewById(R.id.TextMail);
-        TextMdp = findViewById(R.id.TextMdp);
+        TextMdp = findViewById(R.id.TextPhotoURL);
         BoutonCreerCompte = findViewById(R.id.BoutonCreerCompte);
         progressBar2 = findViewById(R.id.progressBar2);
         profilePic = findViewById(R.id.profilePic);
@@ -162,8 +156,9 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this,"Utilisateur créé",Toast.LENGTH_SHORT).show();
-                            utilisateurID = fireBaseAuth.getCurrentUser().getUid();
-                            createUtilisateur(nom, prenom, mail, themes);
+                            user = fireBaseAuth.getCurrentUser();
+                            utilisateurID = user.getUid();
+                            createUtilisateur(utilisateurID,nom, prenom, mail, themes, photoURL);
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         } else{
                             Toast.makeText(RegisterActivity.this,"Erreur ! "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
@@ -208,10 +203,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void uploadPicture() {
-        final String randomKey = UUID.randomUUID().toString();
-        StorageReference riversRef = storageReference.child("images/"+randomKey);
-
-        riversRef.putFile(imageUri)
+        photoURL = UUID.randomUUID().toString();
+        StorageReference imageFilePath = storageReference.child("images/"+ photoURL);
+        imageFilePath.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -247,8 +241,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public void createUtilisateur(String nom, String prenom, String mail, String themes){
-        Utilisateur utilisateur = new Utilisateur(nom, prenom, mail, themes);
+    public void createUtilisateur(String identifiant, String nom, String prenom, String mail, String themes, String photoURL){
+        Utilisateur utilisateur = new Utilisateur(identifiant, nom, prenom, mail, themes, photoURL);
         final Call<Void> user = apiService.createUtilisateur(utilisateur);
         user.enqueue(new Callback<Void>() {
             @Override
@@ -266,6 +260,12 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void goToLoginActivity(View view) {
+        Intent intent=new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

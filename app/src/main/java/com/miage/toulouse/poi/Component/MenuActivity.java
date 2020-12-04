@@ -56,6 +56,12 @@ public class MenuActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToMonProfilActivity(View view) {
+        Intent intent=new Intent(this, MonProfilActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void getHelloWorld(View view){
         final Call<JsonElement> hello = apiService.getHelloWorld();
         hello.enqueue(new Callback<JsonElement>() {

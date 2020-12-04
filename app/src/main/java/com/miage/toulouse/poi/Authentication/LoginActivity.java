@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,13 +18,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.miage.toulouse.poi.Component.MenuActivity;
 import com.miage.toulouse.poi.R;
-import com.miage.toulouse.poi.Services.APIService;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         TextMail = findViewById(R.id.TextMail);
-        TextMdp = findViewById(R.id.TextMdp);
+        TextMdp = findViewById(R.id.TextPhotoURL);
         BoutonConnexion = findViewById(R.id.BoutonConnexion);
         BoutonCreerUnCompte = findViewById(R.id.BoutonCreerUnCompte);
 

@@ -8,12 +8,16 @@ public class Utilisateur implements Serializable {
     private String prenom;
     private String mail;
     private String themes;
+    private String identifiant;
+    private String photoURL;
 
-    public Utilisateur(String nom, String prenom, String mail, String themes) {
+    public Utilisateur(String identifiant, String nom, String prenom, String mail, String themes,  String photoURL) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
         this.themes = themes;
+        this.identifiant=identifiant;
+        this.photoURL=photoURL;
     }
 
     public String getNom() {
