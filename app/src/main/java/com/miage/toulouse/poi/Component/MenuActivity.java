@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Authentication.LoginActivity;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
+import com.miage.toulouse.poi.Services.GestionAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,23 +32,17 @@ public class MenuActivity extends AppCompatActivity {
 
     final String BASE_URL = "https://us-central1-projetmobilite-a0b6f.cloudfunctions.net/app/";
     final String testIdUser = "ZgJERYMXh6eMQgCOWjcftGqULn33";
-
-    Retrofit retrofit;
+    ImageView imageView;
     APIService apiService;
+    GestionAPI gestionAPI = new GestionAPI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-        this.retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        apiService = retrofit.create(APIService.class);
+        apiService = gestionAPI.initApiService();
+        imageView = (ImageView) findViewById(R.id.imageView);
 
     }
 

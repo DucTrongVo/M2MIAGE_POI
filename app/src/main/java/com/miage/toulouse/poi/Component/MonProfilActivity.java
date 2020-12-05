@@ -16,12 +16,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
+import com.miage.toulouse.poi.Services.GestionAPI;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,17 +29,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MonProfilActivity extends AppCompatActivity {
     FirebaseAuth fireBaseAuth;
     APIService apiService;
-    Retrofit retrofit;
     String utilisateurID;
     String photoURL;
     ImageView profilePic;
     StorageReference storageReference;
-    final String BASE_URL = "https://us-central1-projetmobilite-a0b6f.cloudfunctions.net/app/";
+    GestionAPI gestionAPI = new GestionAPI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +50,7 @@ public class MonProfilActivity extends AppCompatActivity {
         ImageView profilePic = (ImageView) findViewById(R.id.profilePic);
         fireBaseAuth = FirebaseAuth.getInstance();
         utilisateurID = fireBaseAuth.getCurrentUser().getUid();
-        initApiService();
+        apiService= gestionAPI.initApiService();
 
         final Call<JsonElement> user = apiService.getUserById(utilisateurID);
 
@@ -100,18 +97,6 @@ public class MonProfilActivity extends AppCompatActivity {
         Intent intent=new Intent(this, MenuActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    public void initApiService(){
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-        this.retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(APIService.class);
     }
 
 }
