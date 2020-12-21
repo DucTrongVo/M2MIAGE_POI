@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth fireBaseAuth;
     ProgressBar progressBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
 
         fireBaseAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
-
         BoutonConnexion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import com.miage.toulouse.poi.Component.ListThemesActivity;
 import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
+import com.miage.toulouse.poi.Services.GestionListThemes;
+import com.miage.toulouse.poi.Services.GestionUtilisateur;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -61,10 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
     String utilisateurID;
     String photoURL;
     ArrayList<String> listThemesUser = new ArrayList<String>();
-
+    GestionListThemes gestionListThemes = new GestionListThemes();
     DatabaseReference dbRef ;
     ImageView profilePic;
     Uri imageUri;
+
+    GestionUtilisateur gestionUtilisateur;
 
     ListView listViewTheme ;
     ArrayList<String> listThemes = new ArrayList<String>();
@@ -104,8 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .build();
 
         apiService = retrofit.create(APIService.class);
-
-        addDataToListView(listViewTheme);
+        gestionListThemes.addDataToListView(listViewTheme, listThemes, getApplicationContext());
         listViewTheme.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -126,25 +130,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String mail = TextMail.getText().toString().trim();
                 String mdp = TextMdp.getText().toString().trim();
                 String themes = createListStringThemes(listThemesUser);
-
-                if(TextUtils.isEmpty(prenom)){
-                    TextPrenom.setError("Le prénom est obligatoire.");
-                    return;
-                }
-                if(TextUtils.isEmpty(mail)){
-                    TextMail.setError("Le mail est obligatoire.");
-                    return;
-                }
-                if(TextUtils.isEmpty(mdp)){
-                    TextMdp.setError("Le mot de passe est obligatoire.");
-                    return;
-                }
-                if(mdp.length() < 4){
-                    TextMdp.setError("Le mot de passe doit contenir au minimum 4 caractères.");
-                    return;
-                }
-                if(listThemesUser.size()==0){
-                    Toast.makeText(RegisterActivity.this, "Veuillez choisir au moins un thème parmis la liste.", Toast.LENGTH_LONG).show();
+                gestionUtilisateur = new GestionUtilisateur(TextPrenom, TextNom,TextMail,TextMdp, themes);
+                if ( !gestionUtilisateur.checkSaisieOk(RegisterActivity.this)) {
                     return;
                 }
 
@@ -224,21 +211,6 @@ public class RegisterActivity extends AppCompatActivity {
     public void goToListThemesActivity(View view) {
         Intent intent=new Intent(this, ListThemesActivity.class);
         startActivity(intent);
-    }
-
-    private void addDataToListView(ListView listViewTheme){
-        fStore.collection("Theme").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                listThemes.clear();
-                for (DocumentSnapshot snapshot : value) {
-                    listThemes.add(snapshot.getString("Nom"));
-                }
-                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, listThemes);
-                arrayAdapter.notifyDataSetChanged();
-                listViewTheme.setAdapter(arrayAdapter);
-            }
-        });
     }
 
     public void createUtilisateur(String identifiant, String nom, String prenom, String mail, String themes, String photoURL){
