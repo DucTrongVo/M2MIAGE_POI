@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,12 +16,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Authentication.LoginActivity;
+import com.miage.toulouse.poi.Entity.PointInteret;
+import com.miage.toulouse.poi.Entity.Theme;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
 import com.miage.toulouse.poi.Services.GestionAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +41,7 @@ public class MenuActivity extends AppCompatActivity {
     ImageView imageView;
     APIService apiService;
     GestionAPI gestionAPI = new GestionAPI();
+    static List<Theme> listThemes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,21 @@ public class MenuActivity extends AppCompatActivity {
 
         apiService = gestionAPI.initApiService();
         imageView = (ImageView) findViewById(R.id.imageView);
+        final Call<List<Theme>> listThemesRequest = apiService.getAllThemes();
+        listThemesRequest.enqueue(new Callback<List<Theme>>(){
+
+            @Override
+            public void onResponse(Call<List<Theme>> call, Response<List<Theme>> response) {
+                List<Theme> listThemesResult = response.body();
+                assert listThemesResult != null;
+                listThemes.addAll(listThemesResult);
+            }
+
+            @Override
+            public void onFailure(Call<List<Theme>> call, Throwable t) {
+                Toast.makeText(MenuActivity.this, "Erreur connexion", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -58,6 +80,11 @@ public class MenuActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToListPointInteret(View view) {
+        Intent intent = new Intent(this, MenuPointInteret.class);
+        startActivity(intent);
+        finish();
+    }
     public void getHelloWorld(View view){
         final Call<JsonElement> hello = apiService.getHelloWorld();
         hello.enqueue(new Callback<JsonElement>() {

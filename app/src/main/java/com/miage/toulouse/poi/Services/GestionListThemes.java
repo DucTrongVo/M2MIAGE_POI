@@ -1,6 +1,7 @@
 package com.miage.toulouse.poi.Services;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -19,6 +20,7 @@ public class GestionListThemes {
     FirebaseFirestore fStore;
     ArrayAdapter<String> arrayAdapter;
 
+    public GestionListThemes(){};
     public void addDataToListView(ListView listViewTheme, ArrayList<String> listThemes, Context context){
         fStore = FirebaseFirestore.getInstance();
         fStore.collection("Theme").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -28,6 +30,7 @@ public class GestionListThemes {
                 for (DocumentSnapshot snapshot : value) {
                     listThemes.add(snapshot.getString("Nom"));
                 }
+                Log.d("GestionListTheme ","listThemes "+listThemes);
                 arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_multiple_choice, listThemes);
                 arrayAdapter.notifyDataSetChanged();
                 listViewTheme.setAdapter(arrayAdapter);

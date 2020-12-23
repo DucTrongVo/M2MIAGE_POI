@@ -2,7 +2,11 @@ package com.miage.toulouse.poi.Services;
 
 import com.google.firebase.firestore.auth.User;
 import com.google.gson.JsonElement;
+import com.miage.toulouse.poi.Entity.PointInteret;
+import com.miage.toulouse.poi.Entity.Theme;
 import com.miage.toulouse.poi.Entity.Utilisateur;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,6 +24,10 @@ public interface APIService {
     @POST("api/users/create")
     Call<Void> createUtilisateur(@Body Utilisateur utilisateur);
 
+    @GET("api/pointInteret")
+    Call<List<PointInteret>> getAllPointInteret();
 
+    @GET("api/themes")
+    Call<List<Theme>> getAllThemes();
 
 }

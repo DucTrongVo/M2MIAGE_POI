@@ -35,7 +35,7 @@
         android:layout_weight="0.7"
         android:background="@color/black"
         android:backgroundTint="@color/black"
-        android:onClick="getUserById"
+        android:onClick="goToListPointInteret"
         android:text="Points d'intérêt à proximité"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
