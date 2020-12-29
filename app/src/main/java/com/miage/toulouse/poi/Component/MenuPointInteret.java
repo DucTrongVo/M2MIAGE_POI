@@ -82,7 +82,8 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
     private List<String> initiateList(List<PointInteret> listPointInterets){
         List<String> listContent = new ArrayList<>();
         for(PointInteret p : listPointInterets){
-            String content = p.getNom() + " - Description : "+p.getDescription()+" - Themes : "+getThemesFromListCodes(p);
+            Coordinates coord1 = new Coordinates(Float.parseFloat(p.getLat()), Float.parseFloat(p.getLon()));
+            String content = p.getNom() + " - Description : "+p.getDescription()+ " - Distance : "+getDistanceFromCurrentLocation(coord1)+" - Themes : "+getThemesFromListCodes(p);
             listContent.add(content);
         }
         for(int j=0;j<listPointInterets.size()/2;j++){
@@ -123,7 +124,6 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         if (requestCode == 8) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
                 currentLocation = getLastKnowLocation();
                 if (currentLocation != null) {
                     coordinates.setLat((float) currentLocation.getLatitude());
@@ -145,7 +145,6 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION }, 8);
         }else{
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             currentLocation = getLastKnowLocation();
 
             if(currentLocation != null){
@@ -161,11 +160,12 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         return distances[0]/1000;
     }
 
+    @SuppressLint("MissingPermission")
     private Location getLastKnowLocation(){
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
         for (String provider : providers) {
-            @SuppressLint("MissingPermission")
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1,1, this);
             Location l = locationManager.getLastKnownLocation(provider);
             if (l == null) {
                 continue;
