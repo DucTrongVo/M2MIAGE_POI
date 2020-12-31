@@ -74,6 +74,18 @@ public class MenuActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToRechercheParNomActivity(View view) {
+        Intent intent=new Intent(this, RechercheParNomActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToRechercheParThemeActivity(View view) {
+        Intent intent=new Intent(this, RechercheParThemeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void goToMonProfilActivity(View view) {
         Intent intent=new Intent(this, MonProfilActivity.class);
         startActivity(intent);
