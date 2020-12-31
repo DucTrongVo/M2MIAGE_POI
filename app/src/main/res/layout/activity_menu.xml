@@ -60,7 +60,8 @@
         android:backgroundTint="@color/black"
         android:text="Rechercher un utilisateur par nom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BoutonCarte" />
+        app:layout_constraintTop_toBottomOf="@+id/BoutonCarte"
+        android:onClick="goToRechercheParNomActivity"/>
 
     <Button
         android:id="@+id/BoutonRechercheParTheme"
@@ -71,6 +72,7 @@
         android:backgroundTint="@color/black"
         android:text="Rechercher un utilisateur par thème"
         app:layout_constraintStart_toStartOf="parent"
+        android:onClick="goToRechercheParThemeActivity"
         app:layout_constraintTop_toBottomOf="@+id/BoutonRechercheParNom" />
 
     <TextView
