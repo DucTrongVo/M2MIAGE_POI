@@ -3,13 +3,15 @@ package com.miage.toulouse.poi.Component;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,10 +21,10 @@ import androidx.core.app.ActivityCompat;
 
 import com.miage.toulouse.poi.Entity.Coordinates;
 import com.miage.toulouse.poi.Entity.PointInteret;
-import com.miage.toulouse.poi.Entity.Theme;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
 import com.miage.toulouse.poi.Services.GestionAPI;
+import com.miage.toulouse.poi.Services.ListPointInteretAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +33,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuPointInteret extends AppCompatActivity implements LocationListener{
+public class MenuPointInteret extends AppCompatActivity implements LocationListener, AdapterView.OnItemClickListener {
     private APIService apiService;
     private GestionAPI gestionAPI;
 
     private List<PointInteret> listPointInterets;
     private ListView listView;
-    private ArrayAdapter<String> arrayAdapter;
+    private ListPointInteretAdapter adapterListPointInteret;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -55,7 +57,7 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         listView = findViewById(R.id.listView_pointInteret);
         gestionAPI = new GestionAPI();
         apiService = gestionAPI.initApiService();
-
+        listView.setOnItemClickListener(MenuPointInteret.this);
         checkPermission();
     }
 
@@ -66,10 +68,10 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
             public void onResponse(Call<List<PointInteret>> call, Response<List<PointInteret>> response) {
                 if(response.isSuccessful()){
                     listPointInterets  = response.body();
-                    List<String> listContent = initiateList(listPointInterets);
-                    arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1, listContent);
-                    listView.setAdapter(arrayAdapter);
-                    initiateList(listPointInterets);
+                    listPointInterets = sortByDistance(listPointInterets);
+                    adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInterets, currentLocation, MenuActivity.listThemes);
+                    listView.setAdapter(adapterListPointInteret);
+                    listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
                 }
             }
 
@@ -79,45 +81,21 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
             }
         });
     }
-    private List<String> initiateList(List<PointInteret> listPointInterets){
-        List<String> listContent = new ArrayList<>();
-        for(PointInteret p : listPointInterets){
-            Coordinates coord1 = new Coordinates(Float.parseFloat(p.getLat()), Float.parseFloat(p.getLon()));
-            String content = p.getNom() + " - Description : "+p.getDescription()+ " - Distance : "+getDistanceFromCurrentLocation(coord1)+" - Themes : "+getThemesFromListCodes(p);
-            listContent.add(content);
-        }
-        for(int j=0;j<listPointInterets.size()/2;j++){
-            for(int i=0;i<listPointInterets.size()-1;i++){
-                Coordinates coord1 = new Coordinates(Float.parseFloat(listPointInterets.get(i).getLat()), Float.parseFloat(listPointInterets.get(i).getLon()));
-                String content1 = listPointInterets.get(i).getNom() + " - Description : "+listPointInterets.get(i).getDescription()
-                        + " - Distance : "+getDistanceFromCurrentLocation(coord1)+" - Themes : "+getThemesFromListCodes(listPointInterets.get(i));
-                Coordinates coord2 = new Coordinates(Float.parseFloat(listPointInterets.get(i+1).getLat()), Float.parseFloat(listPointInterets.get(i+1).getLon()));
-                String content2 = listPointInterets.get(i+1).getNom() + " - Description : "+listPointInterets.get(i+1).getDescription()
-                        + " - Distance : "+getDistanceFromCurrentLocation(coord2)+" - Themes : "+getThemesFromListCodes(listPointInterets.get(i+1));
+
+    private List<PointInteret> sortByDistance(List<PointInteret> listPointInterets){
+        List<PointInteret> listSorted = new ArrayList<>(listPointInterets);
+        for(int j=0;j<listSorted.size();j++){
+            for(int i=0;i<listSorted.size()-1;i++){
+                Coordinates coord1 = new Coordinates(Float.parseFloat(listSorted.get(i).getLat()), Float.parseFloat(listSorted.get(i).getLon()));
+                Coordinates coord2 = new Coordinates(Float.parseFloat(listSorted.get(i+1).getLat()), Float.parseFloat(listSorted.get(i+1).getLon()));
                 if(getDistanceFromCurrentLocation(coord1) > getDistanceFromCurrentLocation(coord2)){
-                    listContent.set(i,content2);
-                    listContent.set(i+1,content1);
-                    PointInteret temp = listPointInterets.get(i);
-                    listPointInterets.set(i,listPointInterets.get(i+1));
-                    listPointInterets.set(i+1,temp);
+                    PointInteret temp = listSorted.get(i);
+                    listSorted.set(i,listSorted.get(i+1));
+                    listSorted.set(i+1,temp);
                 }
             }
         }
-
-        return listContent;
-    }
-
-    private String getThemesFromListCodes(PointInteret pointInteret){
-        StringBuilder themes = new StringBuilder();
-        for(String codeTheme : pointInteret.getThemes().split(";")){
-            for(Theme theme : MenuActivity.listThemes){
-                if(theme.getId().equalsIgnoreCase(codeTheme)){
-                    themes.append(theme.getNom()).append(", ");
-                }
-            }
-        }
-
-        return themes.toString();
+        return listSorted;
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -176,4 +154,23 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         }
         return bestLocation;
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("MenuPointINteret","Clicked on lat "+listPointInterets.get(position).getLat());
+        Log.d("MenuPointINteret","Clicked on lon "+listPointInterets.get(position).getLon());
+        Intent intent = new Intent(MenuPointInteret.this,MapViewPoint.class);
+        intent.putExtra("lat",listPointInterets.get(position).getLat());
+        intent.putExtra("lon",listPointInterets.get(position).getLon());
+        intent.putExtra("description", listPointInterets.get(position).getNom());
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToMenuActivity(View view){
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

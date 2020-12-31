@@ -57,6 +57,7 @@ public class MenuActivity extends AppCompatActivity {
             public void onResponse(Call<List<Theme>> call, Response<List<Theme>> response) {
                 List<Theme> listThemesResult = response.body();
                 assert listThemesResult != null;
+                listThemes = new ArrayList<>();
                 listThemes.addAll(listThemesResult);
             }
 
@@ -85,31 +86,7 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    public void getHelloWorld(View view){
-        final Call<JsonElement> hello = apiService.getHelloWorld();
-        hello.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                if(response.isSuccessful()){
-                    TextView textView = (TextView) findViewById(R.id.textViewTest);
-                    JsonElement res = response.body();
-                    JsonObject jsonObject = res.getAsJsonObject();
-                    String stringToPrint = "User is "+jsonObject.toString();
-                    System.out.println(stringToPrint);
-                    textView.setText(stringToPrint);
 
-                }
-                else{
-                    Toast.makeText(MenuActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Toast.makeText(MenuActivity.this, "Erreur connexion "+t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     public void getUserById(View view){
         final Call<JsonElement> user = apiService.getUserById(testIdUser);
         user.enqueue(new Callback<JsonElement>() {

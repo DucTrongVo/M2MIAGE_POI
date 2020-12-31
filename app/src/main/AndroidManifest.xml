@@ -22,6 +22,7 @@
         <activity android:name=".Component.MonProfilActivity" />
         <activity android:name=".Component.EditProfilActivity"/>
         <activity android:name=".Component.MenuPointInteret"/>
+        <activity android:name=".Component.MapViewPoint"/>
         <activity android:name=".Authentication.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
