@@ -16,7 +16,13 @@ import retrofit2.http.Path;
 
 public interface APIService {
     @GET("api/users/{idUser}")
-    Call<JsonElement> getUserById(@Path("idUser") String idUser);
+    Call<Utilisateur> getUserById(@Path("idUser") String idUser);
+
+    @GET("api/search/users/nom/{nom}")
+    Call<List<Utilisateur>> getUserByNom(@Path("nom") String nom);
+
+    @GET("api/search/users/theme/{theme}")
+    Call<List<Utilisateur>> getUserByTheme(@Path("theme") String theme);
 
     @GET("hello-world")
     Call<JsonElement> getHelloWorld();

@@ -18,6 +18,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Component.EditProfilActivity;
+import com.miage.toulouse.poi.Entity.Theme;
+import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
 import com.miage.toulouse.poi.Services.GestionAPI;
@@ -60,18 +62,17 @@ public class MonProfilActivity extends AppCompatActivity {
         listViewTheme = findViewById(R.id.ListViewThemes);
         listViewTheme.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        final Call<JsonElement> user = apiService.getUserById(utilisateurID);
-        user.enqueue(new Callback<JsonElement>() {
+        final Call<Utilisateur> user = apiService.getUserById(utilisateurID);
+        user.enqueue(new Callback<Utilisateur>() {
             @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
                 if(response.isSuccessful()){
-                    JsonElement res = response.body();
-                    JsonObject jsonObject = res.getAsJsonObject();
-                    textPrenom.setText(jsonObject.get("prenom").getAsString());
-                    textNom.setText(jsonObject.get("nom").getAsString());
-                    textMail.setText(jsonObject.get("mail").getAsString());
-                    photoURL = jsonObject.get("photoURL").getAsString();
-                    themes = jsonObject.get("themes").getAsString();
+                    Utilisateur res = response.body();
+                    textPrenom.setText(res.getPrenom());
+                    textNom.setText(res.getNom());
+                    textMail.setText(res.getMail());
+                    photoURL = res.getPhotoURL();
+                    themes = res.getThemes();
                     try{
                         storageReference = FirebaseStorage.getInstance().getReference().child("images/"+photoURL);
                         File localFile = File.createTempFile(photoURL,"png");
@@ -79,7 +80,7 @@ public class MonProfilActivity extends AppCompatActivity {
                             Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                             profilePic.setImageBitmap(bitmap);
                         });
-                        listThemesUser = themes.split(";");
+                        listThemesUser = getListThemesUser(themes);
                         gestionListThemes.addDataToListView(listViewTheme, listThemes, getApplicationContext(),listThemesUser);
                     }catch (IOException e){
                         e.printStackTrace();
@@ -91,12 +92,23 @@ public class MonProfilActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
                 Toast.makeText(MonProfilActivity.this, "Erreur connexion", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private String[] getListThemesUser(String themes){
+        String[] listT = themes.split(";");
+        for(int i=0; i<listT.length;i++){
+            for(Theme t : MenuActivity.listThemes){
+                if(t.getId().equalsIgnoreCase(listT[i])){
+                    listT[i] = t.getNom();
+                }
+            }
+        }
+        return listT;
+    }
     public void goToMenuActivity(View view) {
         Intent intent=new Intent(this, MenuActivity.class);
         startActivity(intent);

@@ -51,4 +51,20 @@ public class Utilisateur implements Serializable {
     public void setThemes(String themes) {
         this.themes = themes;
     }
+
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Authentication.LoginActivity;
 import com.miage.toulouse.poi.Entity.PointInteret;
 import com.miage.toulouse.poi.Entity.Theme;
+import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
 import com.miage.toulouse.poi.Services.GestionAPI;
@@ -37,15 +39,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MenuActivity extends AppCompatActivity {
 
     final String BASE_URL = "https://us-central1-projetmobilite-a0b6f.cloudfunctions.net/app/";
-    final String testIdUser = "ZgJERYMXh6eMQgCOWjcftGqULn33";
+    FirebaseAuth fireBaseAuth;
+    String utilisateurID;
     ImageView imageView;
     APIService apiService;
     GestionAPI gestionAPI = new GestionAPI();
     static List<Theme> listThemes = new ArrayList<>();
+    static Utilisateur currentUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fireBaseAuth = FirebaseAuth.getInstance();
+        utilisateurID = fireBaseAuth.getCurrentUser().getUid();
         setContentView(R.layout.activity_menu);
 
         apiService = gestionAPI.initApiService();
@@ -63,10 +69,11 @@ public class MenuActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Theme>> call, Throwable t) {
-                Toast.makeText(MenuActivity.this, "Erreur connexion", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MenuActivity.this, "Erreur get Themes", Toast.LENGTH_SHORT).show();
             }
         });
 
+        getUserById();
     }
 
     public void goToLoginActivity(View view) {
@@ -99,18 +106,15 @@ public class MenuActivity extends AppCompatActivity {
         finish();
     }
 
-    public void getUserById(View view){
-        final Call<JsonElement> user = apiService.getUserById(testIdUser);
-        user.enqueue(new Callback<JsonElement>() {
+    public void getUserById(){
+        final Call<Utilisateur> user = apiService.getUserById(utilisateurID);
+        user.enqueue(new Callback<Utilisateur>() {
             @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
                 if(response.isSuccessful()){
-                    TextView textView = (TextView) findViewById(R.id.textViewTest);
-                    JsonElement res = response.body();
-                    JsonObject jsonObject = res.getAsJsonObject();
-                    String stringToPrint = "User is "+jsonObject.get("prenom").getAsString();
-                    System.out.println(stringToPrint);
-                    textView.setText(stringToPrint);
+                    currentUser = response.body();
+                    String stringToPrint = "User is "+currentUser.getNom()+" "+currentUser.getPrenom();
+                    Log.d("MenuActivity", stringToPrint);
                 }
                 else{
                     Toast.makeText(MenuActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
@@ -118,9 +122,9 @@ public class MenuActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                System.out.println(t);
-                Toast.makeText(MenuActivity.this, "Erreur connexion", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
+                System.out.println("Erreur get User : "+t);
+                Toast.makeText(MenuActivity.this, "Erreur get User : "+t, Toast.LENGTH_SHORT).show();
             }
         });
     }

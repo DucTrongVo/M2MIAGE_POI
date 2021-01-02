@@ -22,6 +22,7 @@ public class MapViewPoint extends AppCompatActivity {
     private String lat = "48.7588194";
     private String lon = "1.9441072";
     private String description = "";
+    private String url = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MapViewPoint extends AppCompatActivity {
             lat = extras.getString("lat");
             lon = extras.getString("lon");
             description = extras.getString("description");
+            url = extras.getString("url");
             //The key argument here must match that used in the other activity
         }
         GeoPoint startPoint = new GeoPoint(Float.parseFloat(lat), Float.parseFloat(lon));
@@ -49,6 +51,7 @@ public class MapViewPoint extends AppCompatActivity {
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         //startMarker.setIcon();
         startMarker.setTitle(description);
+        startMarker.setSnippet("URL : "+url);
         mapView.getOverlays().add(startMarker);
 
     }

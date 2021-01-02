@@ -76,12 +76,17 @@ public class ListPointInteretAdapter extends BaseAdapter {
     }
     private String getThemesFromListCodes(PointInteret pointInteret){
         StringBuilder themes = new StringBuilder();
-        for(String codeTheme : pointInteret.getThemes().split(";")){
-            for(int i=0;i<listThemes.size();i++){
-                if(listThemes.get(i).getId().equalsIgnoreCase(codeTheme)){
-                    themes.append(listThemes.get(i).getNom());
-                    if(i < (listThemes.size()-2)){
+        Log.d("ListPointInteretAdapter ","Point Interet "+pointInteret.getNom());
+        Log.d("ListPointInteretAdapter ","pointInteret.getThemes().length"+pointInteret.getThemes().split(";").length);
+        String[] codesThemes = pointInteret.getThemes().split(";");
+        for(int i=0;i<codesThemes.length;i++){
+            for(Theme theme : listThemes){
+                if(theme.getId().equalsIgnoreCase(codesThemes[i])){
+                    themes.append(theme.getNom());
+                    Log.d("ListPointInteretAdapter ","i is"+i);
+                    if(i < (codesThemes.length-1)){
                         themes.append(" - ");
+                        Log.d("ListPointInteretAdapter ","Added - ");
                     }
                 }
             }

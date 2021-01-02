@@ -27,6 +27,7 @@ import com.miage.toulouse.poi.Services.GestionAPI;
 import com.miage.toulouse.poi.Services.ListPointInteretAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,6 +39,8 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
     private GestionAPI gestionAPI;
 
     private List<PointInteret> listPointInterets;
+    private List<PointInteret> listPointInteretsByDistance;
+    private List<PointInteret> listPointInteretsByTheme;
     private ListView listView;
     private ListPointInteretAdapter adapterListPointInteret;
 
@@ -68,8 +71,9 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
             public void onResponse(Call<List<PointInteret>> call, Response<List<PointInteret>> response) {
                 if(response.isSuccessful()){
                     listPointInterets  = response.body();
-                    listPointInterets = sortByDistance(listPointInterets);
-                    adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInterets, currentLocation, MenuActivity.listThemes);
+                    listPointInteretsByDistance = sortByDistance(listPointInterets);
+                    listPointInteretsByTheme = sortByThemes(listPointInterets);
+                    adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretsByDistance, currentLocation, MenuActivity.listThemes);
                     listView.setAdapter(adapterListPointInteret);
                     listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
                 }
@@ -77,7 +81,7 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
 
             @Override
             public void onFailure(Call<List<PointInteret>> call, Throwable t) {
-                Toast.makeText(MenuPointInteret.this, "Erreur Fetch Piont Interet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MenuPointInteret.this, "Erreur Fetch Point Interet", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -96,6 +100,19 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
             }
         }
         return listSorted;
+    }
+
+    private List<PointInteret> sortByThemes(List<PointInteret> listPointInterets){
+        List<PointInteret> listFinal = new ArrayList<>();
+        for(PointInteret p : listPointInterets){
+            List<String> listThemesPointInteret = new ArrayList<>(Arrays.asList(p.getThemes().split(";")));
+            List<String> listThemesUser = new ArrayList<>(Arrays.asList(MenuActivity.currentUser.getThemes().split(";")));
+            listThemesPointInteret.retainAll(listThemesUser);
+            if(listThemesPointInteret.size() > 0){
+                listFinal.add(p);
+            }
+        }
+        return listFinal;
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -157,12 +174,11 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("MenuPointINteret","Clicked on lat "+listPointInterets.get(position).getLat());
-        Log.d("MenuPointINteret","Clicked on lon "+listPointInterets.get(position).getLon());
         Intent intent = new Intent(MenuPointInteret.this,MapViewPoint.class);
         intent.putExtra("lat",listPointInterets.get(position).getLat());
         intent.putExtra("lon",listPointInterets.get(position).getLon());
         intent.putExtra("description", listPointInterets.get(position).getNom());
+        intent.putExtra("url", listPointInterets.get(position).getUrl());
         startActivity(intent);
         finish();
     }
@@ -173,4 +189,15 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         finish();
     }
 
+    public void sortListByDistance(View view){
+        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretsByDistance, currentLocation, MenuActivity.listThemes);
+        listView.setAdapter(adapterListPointInteret);
+        listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
+    }
+
+    public  void sortListByTheme(View view){
+        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretsByTheme, currentLocation, MenuActivity.listThemes);
+        listView.setAdapter(adapterListPointInteret);
+        listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
+    }
 }

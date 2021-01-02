@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.miage.toulouse.poi.Authentication.RegisterActivity;
 import com.miage.toulouse.poi.Component.MonProfilActivity;
+import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
 import com.miage.toulouse.poi.Services.GestionAPI;
@@ -66,18 +67,17 @@ public class EditProfilActivity extends AppCompatActivity {
         listViewTheme = findViewById(R.id.ListViewThemes);
         listViewTheme.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        final Call<JsonElement> user = apiService.getUserById(utilisateurID);
-        user.enqueue(new Callback<JsonElement>() {
+        final Call<Utilisateur> user = apiService.getUserById(utilisateurID);
+        user.enqueue(new Callback<Utilisateur>() {
             @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
                 if(response.isSuccessful()){
-                    JsonElement res = response.body();
-                    JsonObject jsonObject = res.getAsJsonObject();
-                    textPrenom.setText(jsonObject.get("prenom").getAsString());
-                    textNom.setText(jsonObject.get("nom").getAsString());
-                    textMail.setText(jsonObject.get("mail").getAsString());
-                    photoURL = jsonObject.get("photoURL").getAsString();
-                    themes = jsonObject.get("themes").getAsString();
+                    Utilisateur res = response.body();
+                    textPrenom.setText(res.getPrenom());
+                    textNom.setText(res.getNom());
+                    textMail.setText(res.getMail());
+                    photoURL = res.getPhotoURL();
+                    themes = res.getThemes();
                 }
                 else{
                     Toast.makeText(EditProfilActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
@@ -85,7 +85,7 @@ public class EditProfilActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
                 Toast.makeText(EditProfilActivity.this, "Erreur connexion", Toast.LENGTH_SHORT).show();
             }
         });

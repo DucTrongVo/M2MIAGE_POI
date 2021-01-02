@@ -30,7 +30,6 @@ public class GestionListThemes {
                 for (DocumentSnapshot snapshot : value) {
                     listThemes.add(snapshot.getString("Nom"));
                 }
-                Log.d("GestionListTheme ","listThemes "+listThemes);
                 arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_multiple_choice, listThemes);
                 arrayAdapter.notifyDataSetChanged();
                 listViewTheme.setAdapter(arrayAdapter);
