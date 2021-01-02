@@ -12,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface APIService {
@@ -35,5 +36,8 @@ public interface APIService {
 
     @GET("api/themes")
     Call<List<Theme>> getAllThemes();
+
+    @PUT("api/update/user")
+    Call<Void> modifyUtilisateur(@Body Utilisateur utilisateur);
 
 }

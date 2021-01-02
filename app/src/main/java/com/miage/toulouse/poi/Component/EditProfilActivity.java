@@ -67,6 +67,8 @@ public class EditProfilActivity extends AppCompatActivity {
         listViewTheme = findViewById(R.id.ListViewThemes);
         listViewTheme.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
+        gestionListThemes.addDataToListView(listViewTheme, listThemes, getApplicationContext());
+
         final Call<Utilisateur> user = apiService.getUserById(utilisateurID);
         user.enqueue(new Callback<Utilisateur>() {
             @Override
@@ -90,6 +92,7 @@ public class EditProfilActivity extends AppCompatActivity {
             }
         });
 
+
         listViewTheme.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -106,8 +109,20 @@ public class EditProfilActivity extends AppCompatActivity {
              @Override
              public void onClick(View v) {
                  gestionUtilisateur = new GestionUtilisateur(textPrenom, textNom, textMail, themes);
-                 gestionUtilisateur.checkSaisieOkWithoutMdp(EditProfilActivity.this);
-                 // ici modifier l'utilisateur en base
+                 if(gestionUtilisateur.checkSaisieOkWithoutMdp(EditProfilActivity.this)) {
+                     // ici modifier l'utilisateur en base
+                     String nom = textNom.getText().toString().trim();
+                     String prenom = textPrenom.getText().toString().trim();
+                     String mail = textMail.getText().toString().trim();
+                     String themes = gestionListThemes.createListStringThemes(listThemesUser);
+                     fireBaseAuth.getCurrentUser().updateEmail(String.valueOf(mail));
+                     MenuActivity.currentUser.setMail(mail);
+                     MenuActivity.currentUser.setNom(nom);
+                     MenuActivity.currentUser.setPrenom(prenom);
+                     MenuActivity.currentUser.setThemes(themes);
+                     apiService.modifyUtilisateur(MenuActivity.currentUser);
+                     Toast.makeText(EditProfilActivity.this, "Modifications enregistrées", Toast.LENGTH_SHORT).show();
+                 }
              }
          });
 
