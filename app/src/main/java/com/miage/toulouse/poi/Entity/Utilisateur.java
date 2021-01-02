@@ -10,14 +10,16 @@ public class Utilisateur implements Serializable {
     private String themes;
     private String identifiant;
     private String photoURL;
+    private String pointsVisites;
 
-    public Utilisateur(String identifiant, String nom, String prenom, String mail, String themes,  String photoURL) {
+    public Utilisateur(String identifiant, String nom, String prenom, String mail, String themes,  String photoURL, String pointsVisites) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
         this.themes = themes;
         this.identifiant=identifiant;
         this.photoURL=photoURL;
+        this.pointsVisites = pointsVisites;
     }
 
     public String getNom() {
@@ -66,5 +68,13 @@ public class Utilisateur implements Serializable {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+    }
+
+    public String getPointsVisites() {
+        return pointsVisites;
+    }
+
+    public void setPointsVisites(String pointsVisites) {
+        this.pointsVisites = pointsVisites;
     }
 }
