@@ -44,8 +44,8 @@ public class MenuActivity extends AppCompatActivity {
     ImageView imageView;
     APIService apiService;
     GestionAPI gestionAPI = new GestionAPI();
-    static List<Theme> listThemes = new ArrayList<>();
-    static Utilisateur currentUser = null;
+    public static List<Theme> listThemes = new ArrayList<>();
+    public static Utilisateur currentUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

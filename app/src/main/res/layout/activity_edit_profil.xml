@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?android:attr/colorFocusedHighlight"
     android:backgroundTint="@android:color/holo_orange_light"
-    tools:context=".EditProfilActivity">
+    tools:context=".Component.EditProfilActivity">
 
     <Button
         android:id="@+id/BoutonValider"

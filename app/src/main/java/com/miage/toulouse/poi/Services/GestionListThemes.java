@@ -7,12 +7,15 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.miage.toulouse.poi.Component.MenuActivity;
+import com.miage.toulouse.poi.Entity.Theme;
 
 import java.util.ArrayList;
 
@@ -61,7 +64,11 @@ public class GestionListThemes {
     public String createListStringThemes(ArrayList<String> listThemesUser) {
         String themes="";
         for(String theme : listThemesUser){
-            themes = themes+theme+";";
+            for(Theme th : MenuActivity.listThemes){
+                if(th.getNom().equalsIgnoreCase(theme)){
+                    themes = themes+th.getId()+";";
+                }
+            }
         }
         return themes;
     }
