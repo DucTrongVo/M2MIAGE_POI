@@ -41,6 +41,8 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
     private List<PointInteret> listPointInterets;
     private List<PointInteret> listPointInteretsByDistance;
     private List<PointInteret> listPointInteretsByTheme;
+    static List<PointInteret> listPointInteretsVisites;
+    static List<PointInteret> listPointInteretInUsed;
     private ListView listView;
     private ListPointInteretAdapter adapterListPointInteret;
 
@@ -73,7 +75,9 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
                     listPointInterets  = response.body();
                     listPointInteretsByDistance = sortByDistance(listPointInterets);
                     listPointInteretsByTheme = sortByThemes(listPointInterets);
-                    adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretsByDistance, currentLocation, MenuActivity.listThemes);
+                    listPointInteretsVisites = sortByVisites(listPointInterets);
+                    listPointInteretInUsed = listPointInteretsByDistance;
+                    adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretInUsed, currentLocation, MenuActivity.listThemes);
                     listView.setAdapter(adapterListPointInteret);
                     listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
                 }
@@ -114,6 +118,21 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         }
         return listFinal;
     }
+
+    private List<PointInteret> sortByVisites(List<PointInteret> listPointInterets){
+        List<PointInteret> listFinal = new ArrayList<>();
+        String[] listVisites = MenuActivity.currentUser.getPointsVisites().split(";");
+        for(int i = 0; i<listVisites.length;i++){
+            for(PointInteret p : listPointInterets){
+                if(listVisites[i].equalsIgnoreCase(p.getId())){
+                    listFinal.add(p);
+                }
+            }
+        }
+
+        return listFinal;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 8) {
@@ -175,10 +194,11 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(MenuPointInteret.this,MapViewPoint.class);
-        intent.putExtra("lat",listPointInterets.get(position).getLat());
-        intent.putExtra("lon",listPointInterets.get(position).getLon());
-        intent.putExtra("description", listPointInterets.get(position).getNom());
-        intent.putExtra("url", listPointInterets.get(position).getUrl());
+        intent.putExtra("lat",listPointInteretInUsed.get(position).getLat());
+        intent.putExtra("lon",listPointInteretInUsed.get(position).getLon());
+        intent.putExtra("description", listPointInteretInUsed.get(position).getNom());
+        intent.putExtra("url", listPointInteretInUsed.get(position).getUrl());
+        intent.putExtra("idPointInteret", listPointInteretInUsed.get(position).getId());
         intent.putExtra("currentLocation",currentLocation);
         startActivity(intent);
         finish();
@@ -191,13 +211,22 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
     }
 
     public void sortListByDistance(View view){
-        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretsByDistance, currentLocation, MenuActivity.listThemes);
+        listPointInteretInUsed = listPointInteretsByDistance;
+        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretInUsed, currentLocation, MenuActivity.listThemes);
         listView.setAdapter(adapterListPointInteret);
         listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
     }
 
-    public  void sortListByTheme(View view){
-        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretsByTheme, currentLocation, MenuActivity.listThemes);
+    public void sortListByTheme(View view){
+        listPointInteretInUsed = listPointInteretsByTheme;
+        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretInUsed, currentLocation, MenuActivity.listThemes);
+        listView.setAdapter(adapterListPointInteret);
+        listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
+    }
+
+    public void sortListByPointsVisites(View view){
+        listPointInteretInUsed = listPointInteretsVisites;
+        adapterListPointInteret = new ListPointInteretAdapter(getApplicationContext(), listPointInteretInUsed, currentLocation, MenuActivity.listThemes);
         listView.setAdapter(adapterListPointInteret);
         listView.setOnItemClickListener(MenuPointInteret.this::onItemClick);
     }

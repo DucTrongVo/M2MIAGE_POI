@@ -10,11 +10,16 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.miage.toulouse.poi.Entity.PointInteret;
+import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
+import com.miage.toulouse.poi.Services.APIService;
+import com.miage.toulouse.poi.Services.GestionAPI;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -23,17 +28,25 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MapViewPoint extends AppCompatActivity {
     private MapView mapView;
+    APIService apiService;
+    GestionAPI gestionAPI = new GestionAPI();
     private String lat = "48.7588194";
     private String lon = "1.9441072";
     private String description = "";
     private String url = "";
+    private String idPointInteret = "";
     private Location currentLocation = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        apiService= gestionAPI.initApiService();
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         setContentView(R.layout.map_view);
@@ -49,6 +62,7 @@ public class MapViewPoint extends AppCompatActivity {
             lon = extras.getString("lon");
             description = extras.getString("description");
             url = extras.getString("url");
+            idPointInteret = extras.getString("idPointInteret");
             currentLocation = (Location) extras.get("currentLocation");
         }
         // Current Location
@@ -78,5 +92,51 @@ public class MapViewPoint extends AppCompatActivity {
         Intent intent = new Intent(this, MenuPointInteret.class);
         startActivity(intent);
         finish();
+    }
+
+    public void updatePointsVisites(View view){
+        final Call<Void> user = apiService.updatePointsVisites(MenuActivity.currentUser.getIdentifiant(), idPointInteret);
+        user.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    updateCurrentUser();
+                    Toast.makeText(MapViewPoint.this, "Point Interet ajouté dans la liste", Toast.LENGTH_SHORT).show();
+                    //MenuPointInteret.listPointInteretsVisites.add()
+                }
+                else{
+                    Toast.makeText(MapViewPoint.this, "Erreur API", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("Erreur get User : "+t);
+                Toast.makeText(MapViewPoint.this, "Erreur get User : "+t, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateCurrentUser(){
+        final Call<Utilisateur> user = apiService.getUserById(MenuActivity.currentUser.getIdentifiant());
+        user.enqueue(new Callback<Utilisateur>() {
+            @Override
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                if(response.isSuccessful()){
+                    MenuActivity.currentUser = response.body();
+                    String stringToPrint = "User is "+MenuActivity.currentUser.getNom()+" "+MenuActivity.currentUser.getPrenom()+" "+MenuActivity.currentUser.getPointsVisites();
+                    Log.d("MenuActivity", stringToPrint);
+                }
+                else{
+                    Toast.makeText(MapViewPoint.this, "Erreur API", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
+                System.out.println("Erreur get User : "+t);
+                Toast.makeText(MapViewPoint.this, "Erreur get User : "+t, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

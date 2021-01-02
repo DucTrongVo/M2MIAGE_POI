@@ -66,7 +66,7 @@ public class RechercheParThemeActivity extends AppCompatActivity {
                                 }else{
                                     List<String> listNoms = new ArrayList<>();
                                     for(Utilisateur user : listUsers){
-                                        listNoms.add(user.getNom()+" "+user.getPrenom());
+                                        listNoms.add(user.getNom()+" "+user.getPrenom()+" : "+user.getMail());
                                     }
                                     arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, listNoms);
                                     listViewUsers.setAdapter(arrayAdapter);

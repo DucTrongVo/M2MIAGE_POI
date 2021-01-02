@@ -61,7 +61,7 @@
                     android:gravity="center">
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/buttonDistance"
                         android:layout_width="142dp"
                         android:layout_height="wrap_content"
                         android:text="Distance"
@@ -76,13 +76,27 @@
                     android:gravity="center">
 
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/buttonThemes"
                         android:layout_width="131dp"
                         android:layout_height="wrap_content"
                         android:text="Themes"
                         android:onClick="sortListByTheme"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/buttonPointVistes"
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:text="Déja Visités"
+                        android:onClick="sortListByPointsVisites"/>
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

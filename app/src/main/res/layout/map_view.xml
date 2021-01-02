@@ -37,5 +37,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/previous" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonAddPI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp"
+            android:clickable="true"
+            android:onClick="updatePointsVisites"
+            android:layout_alignParentEnd="true"
+            app:srcCompat="@drawable/sharp_add_black_36" />
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

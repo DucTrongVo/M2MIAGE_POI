@@ -3,9 +3,8 @@ package com.miage.toulouse.poi.Component;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,12 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.miage.toulouse.poi.Authentication.RegisterActivity;
-import com.miage.toulouse.poi.Component.MonProfilActivity;
 import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
@@ -29,8 +23,6 @@ import com.miage.toulouse.poi.Services.GestionAPI;
 import com.miage.toulouse.poi.Services.GestionListThemes;
 import com.miage.toulouse.poi.Services.GestionUtilisateur;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -122,10 +114,34 @@ public class EditProfilActivity extends AppCompatActivity {
                      MenuActivity.currentUser.setThemes(themes);
                      apiService.modifyUtilisateur(MenuActivity.currentUser);
                      Toast.makeText(EditProfilActivity.this, "Modifications enregistrées", Toast.LENGTH_SHORT).show();
+                     updateCurrentUser();
                  }
              }
          });
 
+    }
+
+    public void updateCurrentUser(){
+        final Call<Utilisateur> user = apiService.getUserById(utilisateurID);
+        user.enqueue(new Callback<Utilisateur>() {
+            @Override
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                if(response.isSuccessful()){
+                    MenuActivity.currentUser = response.body();
+                    String stringToPrint = "User is "+MenuActivity.currentUser.getNom()+" "+MenuActivity.currentUser.getPrenom();
+                    Log.d("MenuActivity", stringToPrint);
+                }
+                else{
+                    Toast.makeText(EditProfilActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
+                System.out.println("Erreur get User : "+t);
+                Toast.makeText(EditProfilActivity.this, "Erreur get User : "+t, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void goToMonProfilActivity(View view) {
