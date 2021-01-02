@@ -67,7 +67,7 @@ public class RechercheParNomActivity extends AppCompatActivity {
                             if(response.isSuccessful()){
                                 listUsers = response.body();
                                 if(listUsers.size() == 0){
-                                    List<String> noResponse = new ArrayList<>(Arrays.asList("Aucune utilisateur trouvé"));
+                                    List<String> noResponse = new ArrayList<>(Arrays.asList("Aucun utilisateur trouvé"));
                                     arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, noResponse);
                                     listViewUsers.setAdapter(arrayAdapter);
                                 }else{
