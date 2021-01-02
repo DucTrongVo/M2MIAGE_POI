@@ -112,9 +112,21 @@ public class EditProfilActivity extends AppCompatActivity {
                      MenuActivity.currentUser.setNom(nom);
                      MenuActivity.currentUser.setPrenom(prenom);
                      MenuActivity.currentUser.setThemes(themes);
-                     apiService.modifyUtilisateur(MenuActivity.currentUser);
-                     Toast.makeText(EditProfilActivity.this, "Modifications enregistrées", Toast.LENGTH_SHORT).show();
-                     updateCurrentUser();
+                     Call<Void> res = apiService.modifyUtilisateur(MenuActivity.currentUser);
+                     res.enqueue(new Callback<Void>() {
+                         @Override
+                         public void onResponse(Call<Void> call, Response<Void> response) {
+                             if(response.isSuccessful()){
+                                 Toast.makeText(EditProfilActivity.this, "Modifications enregistrées", Toast.LENGTH_SHORT).show();
+                                 updateCurrentUser();
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<Void> call, Throwable t) {
+                             Toast.makeText(EditProfilActivity.this, "Erreur get User : "+t, Toast.LENGTH_SHORT).show();
+                         }
+                     });
                  }
              }
          });
