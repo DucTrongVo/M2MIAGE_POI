@@ -57,4 +57,12 @@ public class GestionListThemes {
             }
         });
     }
+
+    public String createListStringThemes(ArrayList<String> listThemesUser) {
+        String themes="";
+        for(String theme : listThemesUser){
+            themes = themes+theme+";";
+        }
+        return themes;
+    }
 }

@@ -129,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("Register ","prenom "+prenom);
                 Log.d("Register ","mail "+mail);
                 Log.d("Register ","mdp "+mdp);
-                String themes = createListStringThemes(listThemesUser);
+                String themes = gestionListThemes.createListStringThemes(listThemesUser);
                 Log.d("Register ","Themes "+themes);
                 gestionUtilisateur = new GestionUtilisateur(TextPrenom, TextNom,TextMail,TextMdp, themes);
                 if ( !gestionUtilisateur.checkSaisieOk(RegisterActivity.this)) {
@@ -163,14 +163,6 @@ public class RegisterActivity extends AppCompatActivity {
                 choosePicture();
             }
         });
-    }
-
-    private String createListStringThemes(ArrayList<String> listThemesUser) {
-        String themes="";
-        for(String theme : listThemesUser){
-            themes = themes+theme+";";
-        }
-        return themes;
     }
 
     private void choosePicture() {
