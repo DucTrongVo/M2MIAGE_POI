@@ -179,6 +179,7 @@ public class MenuPointInteret extends AppCompatActivity implements LocationListe
         intent.putExtra("lon",listPointInterets.get(position).getLon());
         intent.putExtra("description", listPointInterets.get(position).getNom());
         intent.putExtra("url", listPointInterets.get(position).getUrl());
+        intent.putExtra("currentLocation",currentLocation);
         startActivity(intent);
         finish();
     }
