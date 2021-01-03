@@ -34,6 +34,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.miage.toulouse.poi.Component.ListThemesActivity;
+import com.miage.toulouse.poi.Component.MenuActivity;
+import com.miage.toulouse.poi.Entity.Theme;
 import com.miage.toulouse.poi.Entity.Utilisateur;
 import com.miage.toulouse.poi.R;
 import com.miage.toulouse.poi.Services.APIService;
@@ -41,6 +43,7 @@ import com.miage.toulouse.poi.Services.GestionListThemes;
 import com.miage.toulouse.poi.Services.GestionUtilisateur;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -104,6 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .build();
 
         apiService = retrofit.create(APIService.class);
+        getListTheme();
         gestionListThemes.addDataToListView(listViewTheme, listThemes, getApplicationContext());
         listViewTheme.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -146,6 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this,"Utilisateur créé",Toast.LENGTH_SHORT).show();
                             user = fireBaseAuth.getCurrentUser();
                             utilisateurID = user.getUid();
+                            Log.d("Register","User ID "+utilisateurID);
                             createUtilisateur(utilisateurID,nom, prenom, mail, themes, photoURL, "");
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         } else{
@@ -233,4 +238,19 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    public void getListTheme(){
+        final Call<List<Theme>> listThemesRequest = apiService.getAllThemes();
+        listThemesRequest.enqueue(new Callback<List<Theme>>(){
+
+            @Override
+            public void onResponse(Call<List<Theme>> call, Response<List<Theme>> response) {
+                MenuActivity.listThemes = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<List<Theme>> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, "Erreur get Themes", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

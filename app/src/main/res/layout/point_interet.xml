@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorFocusedHighlight"
-    android:backgroundTint="@android:color/holo_orange_light">
+    android:backgroundTint="@android:color/holo_orange_light"
+    android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +17,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:descendantFocusability="blocksDescendants">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,8 +111,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/listView_pointInteret"
-                >
+                android:id="@+id/listView_pointInteret">
             </ListView>
         </LinearLayout>
     </LinearLayout>
