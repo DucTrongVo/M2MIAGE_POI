@@ -113,7 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedTheme = ((TextView) view).getText().toString();
-                Log.d("Register ","SelectedTheme "+selectedTheme);
                 if (listThemesUser.contains(selectedTheme)) {
                     listThemesUser.remove(selectedTheme);
                 } else {
@@ -129,12 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String prenom = TextPrenom.getText().toString().trim();
                 String mail = TextMail.getText().toString().trim();
                 String mdp = TextMdp.getText().toString().trim();
-                Log.d("Register ","nom "+nom);
-                Log.d("Register ","prenom "+prenom);
-                Log.d("Register ","mail "+mail);
-                Log.d("Register ","mdp "+mdp);
                 String themes = gestionListThemes.createListStringThemes(listThemesUser);
-                Log.d("Register ","Themes "+themes);
                 gestionUtilisateur = new GestionUtilisateur(TextPrenom, TextNom,TextMail,TextMdp, themes);
                 if ( !gestionUtilisateur.checkSaisieOk(RegisterActivity.this)) {
                     return;

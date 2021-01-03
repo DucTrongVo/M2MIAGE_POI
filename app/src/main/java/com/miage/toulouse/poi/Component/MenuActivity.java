@@ -3,6 +3,8 @@ package com.miage.toulouse.poi.Component;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -27,6 +31,8 @@ import com.miage.toulouse.poi.Services.GestionAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +49,7 @@ public class MenuActivity extends AppCompatActivity {
     String utilisateurID;
     ImageView imageView;
     APIService apiService;
+    StorageReference storageReference;
     GestionAPI gestionAPI = new GestionAPI();
     public static List<Theme> listThemes = new ArrayList<>();
     public static Utilisateur currentUser = null;
@@ -74,6 +81,22 @@ public class MenuActivity extends AppCompatActivity {
         });
 
         getUserById();
+    }
+
+    private void afficherLaPhotoDeProfil() {
+        if(currentUser!=null) {
+            String photoURL = currentUser.getPhotoURL();
+            try {
+                storageReference = FirebaseStorage.getInstance().getReference().child("images/" + photoURL);
+                File localFile = File.createTempFile(photoURL, "png");
+                storageReference.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    imageView.setImageBitmap(bitmap);
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void goToLoginActivity(View view) {
@@ -115,6 +138,7 @@ public class MenuActivity extends AppCompatActivity {
                     currentUser = response.body();
                     String stringToPrint = "User is "+currentUser.getNom()+" "+currentUser.getPrenom();
                     Log.d("MenuActivity", stringToPrint);
+                    afficherLaPhotoDeProfil();
                 }
                 else{
                     Toast.makeText(MenuActivity.this, "Erreur API", Toast.LENGTH_SHORT).show();
