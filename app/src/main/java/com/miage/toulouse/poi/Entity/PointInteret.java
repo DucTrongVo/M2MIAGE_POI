@@ -1,10 +1,11 @@
 package com.miage.toulouse.poi.Entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PointInteret {
+public class PointInteret implements Serializable {
     String id;
     String nom;
     String description;
@@ -16,8 +17,9 @@ public class PointInteret {
     String lat;
     String lon;
     String themes;
+    String messages;
 
-    public PointInteret(String id, String nom, String description, String url, String street, String postalCode, String city, String country, String lat, String lon, String themes) {
+    public PointInteret(String id, String nom, String description, String url, String street, String postalCode, String city, String country, String lat, String lon, String themes, String messages) {
         this.id = id;
         this.nom = nom;
         this.description = description;
@@ -30,6 +32,7 @@ public class PointInteret {
         this.lon = lon;
         //this.themes = Arrays.asList(themes.split(";"));
         this.themes = themes;
+        this.messages = messages;
     }
 
     public String getId() {
@@ -118,5 +121,13 @@ public class PointInteret {
 
     public void setThemes(String themes) {
         this.themes = themes;
+    }
+
+    public String getMessages() {
+        return messages;
+    }
+
+    public void setMessages(String messages) {
+        this.messages = messages;
     }
 }

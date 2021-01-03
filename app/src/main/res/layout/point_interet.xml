@@ -43,7 +43,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="textPersonName"
+                    android:inputType="none"
+                    android:editable="false"
                     android:layout_marginLeft="10dp"
                     android:text="Lister les point intérets par" />
             </LinearLayout>

@@ -42,4 +42,7 @@ public interface APIService {
 
     @PUT("api/update/user/{identifiant}/{pointVisite}")
     Call<Void> updatePointsVisites(@Path("identifiant") String identifiant, @Path("pointVisite") String pointVisite);
+
+    @PUT("api/update/pointInteret")
+    Call<Void> updateMessagesPointInteret(@Body PointInteret pointInteret);
 }

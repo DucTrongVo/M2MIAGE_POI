@@ -1,15 +1,18 @@
 package com.miage.toulouse.poi.Services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.miage.toulouse.poi.Component.MenuPointInteret;
+import com.miage.toulouse.poi.Component.MessagesPointInteretActivity;
 import com.miage.toulouse.poi.Entity.Coordinates;
 import com.miage.toulouse.poi.Entity.PointInteret;
 import com.miage.toulouse.poi.Entity.Theme;
@@ -58,7 +61,7 @@ public class ListPointInteretAdapter extends BaseAdapter {
         TextView description = (TextView) vi.findViewById(R.id.listItemPIDescription);
         TextView distance = (TextView) vi.findViewById(R.id.listItemPIDistance);
         TextView themes = (TextView) vi.findViewById(R.id.listItemPIThemes);
-
+        Button boutonMessages = vi.findViewById(R.id.BoutonMessages);
         header.setText(pointInteret.getNom());
         description.setText(pointInteret.getDescription());
         Coordinates coord = new Coordinates(Float.parseFloat(pointInteret.getLat()), Float.parseFloat(pointInteret.getLon()));
@@ -66,6 +69,16 @@ public class ListPointInteretAdapter extends BaseAdapter {
         distance.setText(d);
         String themesUser = getThemesFromListCodes(pointInteret);
         themes.setText(themesUser);
+
+        boutonMessages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(context, MessagesPointInteretActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("myPointInteret",pointInteret);
+                context.startActivity(intent);
+            }
+        });
         return vi;
     }
 

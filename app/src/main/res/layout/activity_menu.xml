@@ -41,38 +41,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/BoutonCarte"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/black"
-        android:text="Carte des évènements effectués"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BoutonPointsInteret" />
-
-    <Button
         android:id="@+id/BoutonRechercheParNom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="80dp"
         android:backgroundTint="@color/black"
+        android:onClick="goToRechercheParNomActivity"
         android:text="Rechercher un utilisateur par nom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BoutonCarte"
-        android:onClick="goToRechercheParNomActivity"/>
+        app:layout_constraintTop_toTopOf="@+id/BoutonPointsInteret" />
 
     <Button
         android:id="@+id/BoutonRechercheParTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
         android:backgroundTint="@color/black"
+        android:onClick="goToRechercheParThemeActivity"
         android:text="Rechercher un utilisateur par thème"
         app:layout_constraintStart_toStartOf="parent"
-        android:onClick="goToRechercheParThemeActivity"
         app:layout_constraintTop_toBottomOf="@+id/BoutonRechercheParNom" />
 
     <TextView
